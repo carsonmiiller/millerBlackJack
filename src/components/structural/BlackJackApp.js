@@ -1,45 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import BadgerLayout from './BadgerLayout';
+import Layout from './Layout';
 import Login from '../auth/Login';
 import Register from '../auth/Register';
 import Logout from '../auth/Logout';
-import BadgerChatroom from '../content/BadgerChatroom';
-import BlackJackHome from '../content/BlackJackHome';
-import BadgerNoMatch from '../content/BadgerNoMatch';
+import Table from '../content/Table';
+import Home from '../content/Home';
+import NoMatch from '../content/NoMatch';
 import BlackJackLoginContext from '../context/BlackJackLoginContext';
 
 function BlackJackApp() {
-
-  const [chatrooms, setChatrooms] = useState([]);
+  const [tables, setTables] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    fetch('https://cs571.org/s23/hw6/api/chatroom', {
-      headers: {
-        "X-CS571-ID": "bid_f6cf574eb476d5ada941",
-      }
-    }).then(res => res.json()).then(json => {
-      setChatrooms(json)
-    })
+    setTables([1, 2, 3]);
   }, []);
 
   return (
     <BlackJackLoginContext.Provider value={[loggedIn, setLoggedIn]}>
       <BrowserRouter>
         <Routes>
-            <Route path="/" element={<BadgerLayout chatrooms={chatrooms} />}>
-              <Route index element={<BlackJackHome />} />
+            <Route path="/" element={<Layout tables={tables} />}>
+              <Route index element={<Home />} />
               <Route path="/login" element={<Login />}></Route>
               <Route path="/register" element={<Register />}></Route>
               <Route path="/logout" element={<Logout />}></Route>
               {
-                chatrooms.map(chatroom => {
-                  return <Route key={chatroom} path={`chatrooms/${chatroom}`} element={<BadgerChatroom name={chatroom} />} />
+                tables.map(table => {
+                  return <Route key={table} path={`tables/${table}`} element={<Table name={table} />} />
                 })
               }
-              <Route path="*" element={<BadgerNoMatch />} />
+              <Route path="*" element={<NoMatch />} />
             </Route>
           
         </Routes>

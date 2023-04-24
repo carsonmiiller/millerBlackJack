@@ -4,9 +4,9 @@ import { Link, Outlet } from "react-router-dom";
 import { useContext } from "react";
 import BlackJackLoginContext from "../context/BlackJackLoginContext";
 
-import crest from '../../assets/uw-crest.svg'
+import logo from '../../assets/blackJackLogo.png'
 
-function BadgerLayout(props) {
+function Layout(props) {
     const [loggedIn, setLoggedIn] = useContext(BlackJackLoginContext);
 
     return (
@@ -15,13 +15,13 @@ function BadgerLayout(props) {
                 <Container>
                     <Navbar.Brand as={Link} to="/">
                         <img
-                            alt="BadgerChat Logo"
-                            src={crest}
-                            width="30"
-                            height="30"
+                            alt="Miller BlackJack Logo"
+                            src={logo}
+                            width="45"
+                            height="52"
                             className="d-inline-block align-top"
                         />{' '}
-                        BadgerChat
+                        Miller BlackJack
                     </Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/">Home</Nav.Link>
@@ -36,14 +36,10 @@ function BadgerLayout(props) {
                                     <Nav.Link as={Link} to="register">Register</Nav.Link>
                                 </>
                         }
-                        <NavDropdown title="Chatrooms">
-                                <NavDropdown.Item as={Link} to="chatrooms/bascom">Bascom</NavDropdown.Item>
-                                <NavDropdown.Item as={Link} to="chatrooms/brogden">Brogden</NavDropdown.Item>
-                                <NavDropdown.Item as={Link} to="chatrooms/chamberlin">Chamberlin</NavDropdown.Item>
-                                <NavDropdown.Item as={Link} to="chatrooms/grainger">Grainger</NavDropdown.Item>
-                                <NavDropdown.Item as={Link} to="chatrooms/ingraham">Ingraham</NavDropdown.Item>
-                                <NavDropdown.Item as={Link} to="chatrooms/vanvleck">Van Vleck</NavDropdown.Item>
-                                <NavDropdown.Item as={Link} to="chatrooms/vilas">Vilas</NavDropdown.Item>
+                        <NavDropdown title="Tables">
+                                <NavDropdown.Item as={Link} to="tables/1">Table 1</NavDropdown.Item>
+                                <NavDropdown.Item as={Link} to="tables/2">Table 2</NavDropdown.Item>
+                                <NavDropdown.Item as={Link} to="tables/3">Table 3</NavDropdown.Item>
                         </NavDropdown>
 
                     </Nav>
@@ -56,4 +52,4 @@ function BadgerLayout(props) {
     );
 }
 
-export default BadgerLayout;
+export default Layout;
