@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react"
 import BadgerMessage from "./BadgerMessage";
-import BadgerLoginContext from "../context/BadgerLoginContext";
+import BadgerLoginContext from "../context/BlackJackLoginContext";
 import { Form, Button } from "react-bootstrap";
 
 export default function BadgerChatroom(props) {

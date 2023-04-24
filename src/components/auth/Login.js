@@ -1,12 +1,12 @@
 import { React, useContext, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import BadgerLoginContext from '../context/BadgerLoginContext';
+import BlackJackLoginContext from '../context/BlackJackLoginContext';
 
-export default function BadgerLogin() {
+export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [loggedIn, setLoggedIn] = useContext(BadgerLoginContext);
+    const [loggedIn, setLoggedIn] = useContext(BlackJackLoginContext);
     const navigate = useNavigate();
 
     const login = () => {

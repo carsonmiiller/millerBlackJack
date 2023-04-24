@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import BadgerLayout from './BadgerLayout';
-import BadgerLogin from '../auth/BadgerLogin';
-import BadgerRegister from '../auth/BadgerRegister';
-import BadgerLogout from '../auth/BadgerLogout';
+import Login from '../auth/Login';
+import Register from '../auth/Register';
+import Logout from '../auth/Logout';
 import BadgerChatroom from '../content/BadgerChatroom';
-import BadgerChatHome from '../content/BadgerChatHome';
+import BlackJackHome from '../content/BlackJackHome';
 import BadgerNoMatch from '../content/BadgerNoMatch';
-import BadgerLoginContext from '../context/BadgerLoginContext';
+import BlackJackLoginContext from '../context/BlackJackLoginContext';
 
-function BadgerApp() {
+function BlackJackApp() {
 
   const [chatrooms, setChatrooms] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -26,15 +26,14 @@ function BadgerApp() {
   }, []);
 
   return (
-    <BadgerLoginContext.Provider value={[loggedIn, setLoggedIn]}>
+    <BlackJackLoginContext.Provider value={[loggedIn, setLoggedIn]}>
       <BrowserRouter>
         <Routes>
-          
             <Route path="/" element={<BadgerLayout chatrooms={chatrooms} />}>
-              <Route index element={<BadgerChatHome />} />
-              <Route path="/login" element={<BadgerLogin />}></Route>
-              <Route path="/register" element={<BadgerRegister />}></Route>
-              <Route path="/logout" element={<BadgerLogout />}></Route>
+              <Route index element={<BlackJackHome />} />
+              <Route path="/login" element={<Login />}></Route>
+              <Route path="/register" element={<Register />}></Route>
+              <Route path="/logout" element={<Logout />}></Route>
               {
                 chatrooms.map(chatroom => {
                   return <Route key={chatroom} path={`chatrooms/${chatroom}`} element={<BadgerChatroom name={chatroom} />} />
@@ -45,8 +44,8 @@ function BadgerApp() {
           
         </Routes>
       </BrowserRouter>
-    </BadgerLoginContext.Provider>
+    </BlackJackLoginContext.Provider>
   );
 }
 
-export default BadgerApp;
+export default BlackJackApp;

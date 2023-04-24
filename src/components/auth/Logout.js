@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
-import BadgerLoginContext from '../context/BadgerLoginContext';
+import BlackJackLoginContext from '../context/BlackJackLoginContext';
 
-export default function BadgerLogout() {
-    const [loggedIn, setLoggedIn] = useContext(BadgerLoginContext);
+export default function Logout() {
+    const [loggedIn, setLoggedIn] = useContext(BlackJackLoginContext);
 
     useEffect(() => {
         fetch('https://cs571.org/s23/hw6/api/logout', {

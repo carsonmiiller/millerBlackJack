@@ -1,7 +1,7 @@
 import { React, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 
-export default function BadgerRegister() {
+export default function Register() {
     const [username, setUsername] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");

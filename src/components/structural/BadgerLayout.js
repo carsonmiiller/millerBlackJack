@@ -2,12 +2,12 @@ import React from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link, Outlet } from "react-router-dom";
 import { useContext } from "react";
-import BadgerLoginContext from "../context/BadgerLoginContext";
+import BlackJackLoginContext from "../context/BlackJackLoginContext";
 
 import crest from '../../assets/uw-crest.svg'
 
 function BadgerLayout(props) {
-    const [loggedIn, setLoggedIn] = useContext(BadgerLoginContext);
+    const [loggedIn, setLoggedIn] = useContext(BlackJackLoginContext);
 
     return (
         <div>

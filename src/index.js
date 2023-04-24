@@ -5,12 +5,12 @@ import reportWebVitals from './reportWebVitals';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import BadgerApp from './components/structural/BadgerApp';
+import BlackJackApp from './components/structural/BlackJackApp';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BadgerApp />
+    <BlackJackApp />
 );
 
 // If you want to start measuring performance in your app, pass a function

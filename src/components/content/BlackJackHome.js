@@ -1,8 +1,8 @@
 import React from "react"
 
-function BadgerChatHome () {
+function BlackJackHome () {
     return <>
-        <h1>Welcome to BadgerChat!</h1>
+        <h1>Welcome to Miller BlackJack!</h1>
         <p>Please be mindful about what you post, this is a chat server shared by every student in CS571.</p>
         <p>As a result, you may see others' posts appear while you are working, this is perfectly normal!</p>
         <p>All content that you post can be linked back to you through your referral code.</p>
@@ -10,4 +10,4 @@ function BadgerChatHome () {
     </>
 }
 
-export default BadgerChatHome;
+export default BlackJackHome;
