@@ -3,26 +3,41 @@ import PlayingCard from "./PlayingCard"
 import { Container, Row, Col, Button } from "react-bootstrap"
 
 export default function Table (props) {
-
     const [deck, setDeck] = useState([])
     const [handLive, setHandLive] = useState(false)
     const [playerHand, setPlayerHand] = useState([])
     const [dealerHand, setDealerHand] = useState([])
     const [playerScore, setPlayerScore] = useState(0)
 
+    // check if player busts
     useEffect(() => {
+        // sort cards by value, aces last
+        playerHand.sort((a, b) => {
+            let aVal = a.substring(0, a.length - 1)
+            let bVal = b.substring(0, b.length - 1)
+            if (aVal === "A") return 1
+            if (bVal === "A") return -1
+            return parseInt(aVal) - parseInt(bVal)
+        })
         let score = 0
         playerHand.forEach((card) => {
             let cardValue = card.substring(0, card.length - 1)
-            if (cardValue === "J" || cardValue === "Q" || cardValue === "K") {
+            if (cardValue === "J" || cardValue === "Q" || cardValue === "K")
                 score += 10
-            } else if (cardValue !== "A") {
+            else if (cardValue !== "A")
                 score += parseInt(cardValue)
-            }
+            else if (score + 11 > 21)
+                score += 1
+            else
+                score += 11
         })
         setPlayerScore(score)
+        if(score > 21) {
+            setHandLive(false)
+        }
     }, [playerHand])
     
+    // create deck
     useEffect(() => {
         let newDeck = []
         let suits = ["C", "D", "H", "S"]
@@ -41,7 +56,6 @@ export default function Table (props) {
         setDeck(newDeck)
     }, [])
 
-    // function that selects a random card from the deck and returns it
     const getRandomCard = () => {
         let randomIndex = Math.floor(Math.random() * deck.length)
         return deck[randomIndex]
@@ -111,9 +125,11 @@ export default function Table (props) {
         <Container>
             <p>Player Hand</p>
             {displayPlayerHand()}
-            <p>Score: {playerScore}</p>
         </Container>
         <Container>
+            {
+                handLive ? <p>Score: {playerScore}</p> : <p>Busted!</p>
+            }
             {actionButtons()}
         </Container>
     </>
