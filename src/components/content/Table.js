@@ -4,133 +4,176 @@ import { Container, Row, Col, Button } from "react-bootstrap"
 
 export default function Table (props) {
     const [deck, setDeck] = useState([])
-    const [handLive, setHandLive] = useState(false)
+    const [playerLive, setPlayerLive] = useState(false)
     const [playerHand, setPlayerHand] = useState([])
     const [dealerHand, setDealerHand] = useState([])
-    const [playerScore, setPlayerScore] = useState(0)
 
-    // check if player busts
-    useEffect(() => {
-        // sort cards by value, aces last
-        playerHand.sort((a, b) => {
-            let aVal = a.substring(0, a.length - 1)
-            let bVal = b.substring(0, b.length - 1)
-            if (aVal === "A") return 1
-            if (bVal === "A") return -1
-            return parseInt(aVal) - parseInt(bVal)
-        })
-        let score = 0
-        playerHand.forEach((card) => {
-            let cardValue = card.substring(0, card.length - 1)
-            if (cardValue === "J" || cardValue === "Q" || cardValue === "K")
-                score += 10
-            else if (cardValue !== "A")
-                score += parseInt(cardValue)
-            else if (score + 11 > 21)
-                score += 1
-            else
-                score += 11
-        })
-        setPlayerScore(score)
-        if(score > 21) {
-            setHandLive(false)
-        }
-    }, [playerHand])
-    
     // create deck
-    useEffect(() => {
-        let newDeck = []
-        let suits = ["C", "D", "H", "S"]
+    const initDeck = () => {
+        const newDeck = []
+        const suits = ['♠', '♣', '♥', '♦']
+        const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
 
-        for (let i = 2; i <= 10; i++) {
-            for (let j = 0; j < suits.length; j++) {
-                newDeck.push(i + suits[j])
+        for (let rank of ranks) {
+            for (let suit of suits) {
+                newDeck.push({suit, rank})
             }
         }
-        for (let i = 0; i < suits.length; i++) {
-            newDeck.push("J" + suits[i])
-            newDeck.push("Q" + suits[i])
-            newDeck.push("K" + suits[i])
-            newDeck.push("A" + suits[i])
+        
+        // shuffle deck
+        for (let i = newDeck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newDeck[i], newDeck[j]] = [newDeck[j], newDeck[i]];
         }
+
         setDeck(newDeck)
+    }
+
+    useEffect(() => {
+        initDeck()
     }, [])
 
-    const getRandomCard = () => {
-        let randomIndex = Math.floor(Math.random() * deck.length)
-        return deck[randomIndex]
+    // function to deal initial cards
+    const dealInitialCards = () => {
+        const card1 = deck.pop();
+        const card2 = deck.pop();
+        const dealerCard1 = deck.pop();
+        const dealerCard2 = deck.pop();
+        dealerCard1.hidden = true;
+
+        setPlayerHand([card1, card2]);
+        setDealerHand([dealerCard1, dealerCard2]);
+        setPlayerLive(true);
+    };      
+    
+    const calcScore = (hand) => {
+        let value = 0;
+        let hasAce = false;
+
+        for (let card of hand) {
+            if (card.rank === 'A') {
+                hasAce = true;
+                value += 11;
+            } else if (card.rank === 'K' || card.rank === 'Q' || card.rank === 'J')
+                value += 10;
+            else
+                value += parseInt(card.rank);
+        }
+
+        // adjust the value if the hand has an Ace and it's value needs to be reduced
+        if (hasAce && value > 21) {
+            value -= 10;
+        }
+    
+        return value;
     }
 
-    const startHand = () => {
-        setHandLive(true)
-        setPlayerHand([getRandomCard(), getRandomCard()])
-        setDealerHand([getRandomCard(), getRandomCard()])
+    const handleHit = () => {
+        const newCard = deck.pop()
+        setPlayerHand(oldPlayerHand => [...oldPlayerHand, newCard])
     }
 
-    const hit = () => {
-        setPlayerHand([...playerHand, getRandomCard()])
-    }
+    const handleStand = () => {
+        setPlayerLive(false);
+
+        // dealer's turn
+        let dealerHandCopy = [...dealerHand];
+
+        while (calcScore(dealerHandCopy) < 17) {
+            const newCard = deck.pop();
+            dealerHandCopy.push(newCard);
+        }
+
+        setDealerHand(dealerHandCopy);
+    };
+   
+    const renderDealerHand = () => {
+        // Check if the first card should be hidden
+        if (dealerHand.length > 0 && dealerHand[0].hidden) {
+            // Create a copy of the first card with the 'hidden' property removed
+            const hiddenCard = { ...dealerHand[0] };
+            delete hiddenCard.hidden;
+    
+            // Create a new array with the hidden card replaced by the copy without 'hidden'
+            const visibleHand = [hiddenCard, ...dealerHand.slice(1)];
+    
+            return renderCards(visibleHand);
+            }
+            console.log(dealerHand)
+    
+        return renderCards(dealerHand);
+    };
+   
+    const renderCards = (hand) => {
+        return playerHand.map((card, index) => (
+            <PlayingCard key={index} hidden={card.hidden} rank={card.rank} suit={card.suit}/>
+        ));
+    };
 
     const actionButtons = () => {
-        if (!handLive) {
-            return <Button onClick={startHand}>Deal</Button>
+        if (!playerLive) {
+            return <Button onClick={dealInitialCards}>Deal</Button>
         } else {
             return <Row>
                 <Col xs={12} sm={6} md={4} lg={3} xl={2}>
-                    <Button onClick={hit}>Hit</Button>
+                    <Button onClick={handleHit}>Hit</Button>
                 </Col>
                 <Col xs={12} sm={6} md={4} lg={3} xl={2}>
-                    <Button>Stand</Button>
+                    <Button onClick={handleStand}>Stand</Button>
                 </Col>
-                <Col xs={12} sm={6} md={4} lg={3} xl={2}>
+                {/* <Col xs={12} sm={6} md={4} lg={3} xl={2}>
                     <Button>Double Down</Button>
                 </Col>
                 <Col xs={12} sm={6} md={4} lg={3} xl={2}>
                     <Button>Split</Button>
-                </Col>
+                </Col> */}
             </Row>
         }
     }
 
-    const displayDealerHand = () => {
-        return <Row>
-            {
-                // display all cards except the first one
-                dealerHand.map((card, index) => {
-                    if (index !== 0) {
-                        return <Col><PlayingCard name={card}/></Col>
-                    }
-                })
-            }
-        </Row>
-    }
-
-    const displayPlayerHand = () => {
-        return <Row>
-            {
-                // display all cards
-                playerHand.map((card) => {
-                    return <Col><PlayingCard name={card}/></Col>
-                })
-            }
-        </Row>
-    }
-
-
     return <>
         <Container>
             <p>Dealer Hand</p>
-            {displayDealerHand()}
+            {renderDealerHand()}
+            {
+                calcScore(dealerHand) > 21 ?
+                    <p>Busted!</p>
+                    :
+                    <p>Score: {calcScore(dealerHand)}</p>
+            }
         </Container>
         <Container>
             <p>Player Hand</p>
-            {displayPlayerHand()}
+            {renderCards(playerHand)}
         </Container>
         <Container>
             {
-                handLive ? <p>Score: {playerScore}</p> : <p>Busted!</p>
+                calcScore(playerHand) > 21 ?
+                    <p>Busted!</p>
+                    :
+                    <p>Score: {calcScore(playerHand)}</p>
             }
             {actionButtons()}
         </Container>
     </>
+    
+
+    // // Render the component
+    // return (
+    //     <div className="blackjack-table">
+    //     <div className="dealer-hand">
+    //         <h3>Dealer's Hand</h3>
+    //         <div className="cards">{renderCards(dealerHand)}</div>
+    //     </div>
+    //    { <div className="player-hand">
+    //         <h3>Player's Hand</h3>
+    //         {renderPlayerHand}
+    //     </div>}
+    //     <div className="buttons">
+    //         <button onClick={dealInitialCards}>Deal</button>
+    //         <button onClick={handleHit}>Hit</button>
+    //         <button onClick={handleStand}>Stand</button>
+    //     </div>
+    //     </div>
+    // );
 }

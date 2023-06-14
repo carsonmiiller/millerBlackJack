@@ -8,7 +8,7 @@ const PlayingCard = (props) => {
         
         <Card className='m-2' >
             <Card.Body>
-                <Card.Title>{props.name}</Card.Title>
+                <Card.Title>{props.hidden === true ? 'Hidden' : `${props.rank}${props.suit}`}</Card.Title>
             </Card.Body>
         </Card>
     );
